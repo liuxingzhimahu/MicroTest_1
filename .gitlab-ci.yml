@@ -19,7 +19,6 @@ test_job:
 package_job:
   stage: package
   script:
-   - cd User.API
    - docker build -t userapi:test .
 
 
