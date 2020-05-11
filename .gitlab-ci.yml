@@ -1,0 +1,29 @@
+stages:
+  - build
+  - test
+  - package
+  - deploy
+
+build_job:
+  stage: build
+  script:
+    - cd User.API
+    - dotnet build
+
+test_job:
+  stage: test
+  script:
+   - cd User.API.Tests
+   - dotnet test
+
+package_job:
+  stage: package
+  script:
+   - cd User.API
+   - docker build -t userapi:test .
+
+
+deploy_job:
+  stage: deploy
+  script:
+   - docker run -d -p 8080:80 userapi:test

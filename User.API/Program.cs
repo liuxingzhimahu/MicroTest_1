@@ -22,7 +22,7 @@ namespace User.API
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder
-                    .UseUrls("http://+:5002")
+                    .UseUrls("http://+:80")
                     .UseStartup<Startup>();
                 });
     }
