@@ -22,7 +22,7 @@ package_job:
    - cd User.API
    - docker build -t userapi:v1 .
    - docker login -u ${username} -p ${password} ${registry}
-   - docker tag registry.cn-shanghai.aliyuncs.com/jonny_microservice/user_api:v1
+   - docker tag userapi:v1 registry.cn-shanghai.aliyuncs.com/jonny_microservice/user_api:v1
    - docker push registry.cn-shanghai.aliyuncs.com/jonny_microservice/user_api:v1
 
 deploy_job:
