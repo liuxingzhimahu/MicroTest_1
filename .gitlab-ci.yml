@@ -29,4 +29,4 @@ deploy_job:
   stage: deploy
   script:
    - docker rm mysql01 -f
-   - docker run -d -p 8080:80  --link mysql01:db --name userapi userapi:v1
+   - docker run -d -p 5008:80  --link mysql01:db --name userapi userapi:v1
