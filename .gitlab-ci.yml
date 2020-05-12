@@ -21,8 +21,11 @@ package_job:
   script:
    - cd User.API
    - docker build -t userapi:v1 .
+   - docker login -u ${username} -p ${password} ${registry}
+   - docker tag userapi:v1 ${repo}
+   - docker push ${repo}
 
 deploy_job:
   stage: deploy
   script:
-   - docker run -d -p 8080:80 userapi:test
+   - docker run -d -p 8080:80  --link mysql01:db --name userapi userapi:v1
