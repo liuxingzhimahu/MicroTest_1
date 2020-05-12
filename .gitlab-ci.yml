@@ -22,8 +22,8 @@ package_job:
    - cd User.API
    - docker build -t userapi:v1 .
    - docker login -u ${username} -p ${password} ${registry}
-   - docker tag ${repo}:v1
-   - docker push ${repo}:v1
+   - docker tag registry.cn-shanghai.aliyuncs.com/jonny_microservice/user_api:v1
+   - docker push registry.cn-shanghai.aliyuncs.com/jonny_microservice/user_api:v1
 
 deploy_job:
   stage: deploy
