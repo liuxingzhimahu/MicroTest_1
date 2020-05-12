@@ -22,8 +22,8 @@ package_job:
    - cd User.API
    - docker build -t userapi:v1 .
    - docker login -u ${username} -p ${password} ${registry}
-   - docker tag userapi:v1 ${repo}
-   - docker push ${repo}
+   - docker tag ${repo}:v1
+   - docker push ${repo}:v1
 
 deploy_job:
   stage: deploy
