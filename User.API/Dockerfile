@@ -6,10 +6,10 @@ EXPOSE 80
 
 FROM mcr.microsoft.com/dotnet/core/sdk:3.1-buster AS build
 WORKDIR /src
-COPY ["User.API/User.API.csproj", "User.API/"]
-RUN dotnet restore "User.API/User.API.csproj"
+COPY ["User.API.csproj", ""]
+RUN dotnet restore "./User.API.csproj"
 COPY . .
-WORKDIR "/src/User.API"
+WORKDIR "/src/."
 RUN dotnet build "User.API.csproj" -c Release -o /app/build
 
 FROM build AS publish
