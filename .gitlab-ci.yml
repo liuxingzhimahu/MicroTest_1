@@ -18,7 +18,8 @@ test_job:
 
 package_job:
   stage: package
-  only: master
+  only:
+   - master
   script:
    - cd User.API
    - docker build -t userapi:v1 .
