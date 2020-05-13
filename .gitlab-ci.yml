@@ -18,6 +18,8 @@ test_job:
 
 package_job:
   stage: package
+  only:
+   - master
   script:
    - cd User.API
    - docker build -t userapi:v1 .
@@ -25,8 +27,7 @@ package_job:
    - docker tag userapi:v1 registry.cn-shanghai.aliyuncs.com/jonny_microservice/user_api:v1
    - docker push registry.cn-shanghai.aliyuncs.com/jonny_microservice/user_api:v1
 
-deploy_job:
-  stage: deploy
-  script:
-   - docker rm userapi:v1 -f
-   - docker run -d -p 5008:80  --link mysql01:db --name userapi:v1 userapi:v1
+#deploy_job:
+  #stage: deploy
+  #script:
+  # - docker run -d -p 5008:80  --link mysql01:db --name userapi:v1 userapi:v1
