@@ -50,5 +50,26 @@ namespace User.API.Controllers
             _userContext.SaveChanges();
             return Json(user);
         }
+
+        /// <summary>
+        /// 当用户不存在创建用户
+        /// </summary>
+        /// <param name="phone"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("check-or-create")]
+        public async Task<IActionResult> CheckOrCreate(string phone)
+        {
+
+            var user = _userContext.Users.SingleOrDefault(u=>u.Phone ==phone);
+            if (user == null)
+            {
+                user = new APPUser { Phone = phone };
+                _userContext.Users.Add(user);
+                await _userContext.SaveChangesAsync();
+            }
+
+            return Ok(user.Id);
+        }
     }
 }

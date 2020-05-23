@@ -7,7 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
-namespace User.API
+namespace User.Identity
 {
     public class Program
     {
@@ -18,12 +18,10 @@ namespace User.API
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
-              
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder
-                   // .UseUrls("http://+:5002")
-                    .UseStartup<Startup>();
+                    webBuilder.UseStartup<Startup>();
+                    webBuilder.UseUrls("http://+:5001");
                 });
     }
 }
