@@ -5,19 +5,19 @@ using System.Threading.Tasks;
 
 namespace User.API.Dtos
 {
-    public class UserIderntity
+    public class UserIdentity
     {
         /// <summary>
         /// 用户ID
         /// </summary>
         public int UserId { get; set; }
-        /// <summary>
-        /// 用户名称
-        /// </summary>
+        //以下信息包含在 token-claims 里
         public string Name { get; set; }
-        /// <summary>
-        /// 用户头像
-        /// </summary>
+
+        public string Company { get; set; }
+
+        public string Title { get; set; }
+
         public string Avatar { get; set; }
 
 

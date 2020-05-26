@@ -16,11 +16,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{97DFBA4E
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "User.Identity", "User.Identity\User.Identity.csproj", "{42C6D6E5-212D-4FCE-A1AF-663B1ED469B8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gateway.API", "API.Gateway\Gateway.API.csproj", "{A0519E39-58AD-4B0B-A385-984E211B2DB5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gateway.API", "API.Gateway\Gateway.API.csproj", "{A0519E39-58AD-4B0B-A385-984E211B2DB5}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BuildingBlocks", "BuildingBlocks", "{2D55256C-9D08-4334-AB5F-523030D66AD3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Resilience", "..\Resilience\Resilience.csproj", "{E3C98B58-61A5-4CFC-B34D-FEBC02365C03}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Resilience", "..\Resilience\Resilience.csproj", "{E3C98B58-61A5-4CFC-B34D-FEBC02365C03}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Contact.API", "..\Contact.API\Contact.API.csproj", "{B4E62D8C-7E89-41AB-BC48-F86CAB4D9DAC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -48,6 +50,10 @@ Global
 		{E3C98B58-61A5-4CFC-B34D-FEBC02365C03}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E3C98B58-61A5-4CFC-B34D-FEBC02365C03}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E3C98B58-61A5-4CFC-B34D-FEBC02365C03}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B4E62D8C-7E89-41AB-BC48-F86CAB4D9DAC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B4E62D8C-7E89-41AB-BC48-F86CAB4D9DAC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B4E62D8C-7E89-41AB-BC48-F86CAB4D9DAC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B4E62D8C-7E89-41AB-BC48-F86CAB4D9DAC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

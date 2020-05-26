@@ -36,15 +36,15 @@ namespace User.Identity
                  AllowOfflineAccess=true,
                  RequireClientSecret = false,
                  AlwaysIncludeUserClaimsInIdToken=true,
-                 //ClientSecrets =
-                 //   {
-                 //    new Secret("secret".Sha256())
-                 //},
+                 ClientSecrets =
+                    {
+                     new Secret("secret".Sha256())
+                 },
                  AllowedScopes=new List<string> //这个Client允许访问的Resource
                  {
                    "gateway_api",
-                   //"user_api",
-                   //"contact_api",
+                   "user_api",
+                   "contact_api",
                    //"project_api",
                    //"recommend_api",
                    IdentityServerConstants.StandardScopes.OpenId,

@@ -10,23 +10,93 @@
         }
       ],
       "UpstreamPathTemplate": "/users",
+      "UpstreamHttpMethod": [ "Get", "Patch" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "finbook",
+        "AllowedScopes": [ "user_api" ]
+      }
+    },
+    { //User.API 获取用户基本信息
+      "DownstreamPathTemplate": "/api/users/baseUserInfo/{userId}", //下游路径
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [ //下游Host和端口
+        {
+          "Host": "localhost",
+          "Port": 5002
+        }
+      ],
+      "UpstreamPathTemplate": "/users/baseUserInfo/{userId}", //上游路径
       "UpstreamHttpMethod": [ "Get" ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "finbook",
-        "AllowedScopes": []
+        "AllowedScopes": [ "user_api" ]
       }
     },
-    {
-      "DownstreamPathTemplate": "/connect/token",
+    //User.Identity
+    { //User.Identity well-known
+      "DownstreamPathTemplate": "/.well-known/{catchAll}", //下游路径
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
+      "DownstreamHostAndPorts": [ //下游Host和端口
         {
           "Host": "localhost",
           "Port": 5001
         }
       ],
-      "UpstreamPathTemplate": "/connect/token",
+      "UpstreamPathTemplate": "/.well-known/{catchAll}", //上游路径
+      "UpstreamHttpMethod": [ "Get" ]
+    },
+    {
+      //User.Identity connect
+      "DownstreamPathTemplate": "/connect/{catchAll}", //下游路径
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [ //下游Host和端口
+        {
+          "Host": "localhost",
+          "Port": 5001
+        }
+      ],
+      "UpstreamPathTemplate": "/connect/{catchAll}", //上游路径
       "UpstreamHttpMethod": [ "Post" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/contacts",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5003
+        }
+      ],
+      "UpstreamPathTemplate": "/contacts",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "finbook",
+        "AllowedScopes": [ "contact_api" ]
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/contacts/tags",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5003
+        }
+      ],
+      "UpstreamPathTemplate": "/contacts/tags",
+      "UpstreamHttpMethod": [ "Put" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/contacts/apply-requests",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5003
+        }
+      ],
+      "UpstreamPathTemplate": "/contacts/apply-requests",
+      "UpstreamHttpMethod": [ "Get", "Post", "Put" ]
     }
   ],
   "GlobalConfiguration": {

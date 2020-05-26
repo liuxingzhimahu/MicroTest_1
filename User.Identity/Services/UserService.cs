@@ -1,6 +1,7 @@
 ﻿using DnsClient;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
 using Resilience;
 using System;
 using System.Collections.Generic;
@@ -8,6 +9,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using User.Identity.Dtos;
 using User.Identity.Options;
 
 namespace User.Identity.Services
@@ -32,29 +34,25 @@ namespace User.Identity.Services
             var port = address.First().Port;
 
             _userServiceUrl = $"http://{host}:{port}";
-
-
-
-
         }
 
-        public async Task<int> CheckOrCreate(string phone)
+        public async Task<UserInfo> CheckOrCreate(string phone)
         {
             _logger.LogTrace($"Enter into CheckOrCreate:{phone}");
+            var form = new Dictionary<string, string> { { "phone", phone } };
 
-            var form = new Dictionary<string, string>
-            {
-                { "phone",phone}
-            };
+            var content = new FormUrlEncodedContent(form);
 
             try
             {
-                var response = await _httpClient.PostAsync(_userServiceUrl + "/api/users/check-or-create", form);
-                if (response.StatusCode != HttpStatusCode.OK)
+                var response = await _httpClient.PostAsync(string.Concat(_userServiceUrl, "/api/users/check-or-create"), form);
+
+                if (response.StatusCode == HttpStatusCode.OK)
                 {
-                    var userId = await response.Content.ReadAsStringAsync();
-                    int.TryParse(userId, out int intUserId);
-                    return intUserId;
+                    var result = await response.Content.ReadAsStringAsync();
+                    var userInfo = JsonConvert.DeserializeObject<UserInfo>(result);
+                    _logger.LogTrace($"Completed CheckOrCreate with userId:{userInfo.Id}");
+                    return userInfo;
 
                 }
             }
@@ -64,7 +62,7 @@ namespace User.Identity.Services
                 throw ex;
             }
 
-            return 0;
+            return null;
 
         }
     }

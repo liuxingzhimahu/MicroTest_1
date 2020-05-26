@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using IdentityServer4.Models;
 using IdentityServer4.Validation;
@@ -23,7 +24,7 @@ namespace User.Identity.Authencation
 
         public async Task ValidateAsync(ExtensionGrantValidationContext context)
         {
-            var phone = context.Request.Raw["phone"];
+             var phone = context.Request.Raw["phone"];
             var code = context.Request.Raw["auth_code"];
             var errorValidationResult = new GrantValidationResult(TokenRequestErrors.InvalidGrant);
 
@@ -41,14 +42,24 @@ namespace User.Identity.Authencation
             }
 
             //完成用户注册
-            var userId = await _userService.CheckOrCreate(phone);
-            if (userId <= 0)
+            var userInfo = await _userService.CheckOrCreate(phone);
+            if (userInfo == null)
             {
                 context.Result = errorValidationResult;
                 return;
             }
 
-            context.Result = new GrantValidationResult(userId.ToString(), GrantType);
+            var claims = new Claim[] {
+                new Claim("name",userInfo.Name??string.Empty),
+                new Claim("company",userInfo.Company??string.Empty),
+                new Claim("title",userInfo.Title??string.Empty),
+                new Claim("phone",userInfo.Phone??string.Empty),
+                new Claim("avatar",userInfo.Avatar??string.Empty)
+            };
+
+            context.Result = new GrantValidationResult(userInfo.Id.ToString()
+                ,GrantType
+                ,claims);
         }
     }
 }

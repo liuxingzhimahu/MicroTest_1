@@ -17,6 +17,8 @@ using Microsoft.AspNetCore.Hosting.Server.Features;
 using User.API.Options;
 using Microsoft.Extensions.Options;
 using Consul;
+using System.IdentityModel.Tokens.Jwt;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace User.API
 {
@@ -45,6 +47,17 @@ namespace User.API
                 var serviceConfigrations = p.GetRequiredService<IOptions<ServiceDiscoveryOptions>>().Value;
                 cfg.Address = new Uri(serviceConfigrations.Consul.HttpEndpoint);
             }));
+
+            #region JWT认证
+            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    options.RequireHttpsMetadata = false;           //是否启用Https
+                    options.Audience = "contact_api";               //当前API名称
+                    options.Authority = "http://localhost:5000";    //网关地址
+                });
+            #endregion
 
             services.AddControllers(options => {
                 options.Filters.Add(typeof(GlobalExceptionFilter));
@@ -75,6 +88,7 @@ namespace User.API
 
 
             app.SeedAsync().Wait();
+            app.UseAuthentication();
 
             app.UseRouting();
 
