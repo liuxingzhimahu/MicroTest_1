@@ -86,7 +86,7 @@
       "UpstreamPathTemplate": "/contacts/tags",
       "UpstreamHttpMethod": [ "Put" ]
     },
-    {
+    { //Contact.API-获取好友申请列表/通过好友请求
       "DownstreamPathTemplate": "/api/contacts/apply-requests",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
@@ -96,7 +96,27 @@
         }
       ],
       "UpstreamPathTemplate": "/contacts/apply-requests",
-      "UpstreamHttpMethod": [ "Get", "Post", "Put" ]
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "finbook",
+        "AllowedScopes": [ "contact_api" ]
+      }
+    },
+    { //Contact.API-添加好友请求
+      "DownstreamPathTemplate": "/api/contacts/apply-requests/{catchAll}", //下游路径
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [ //下游Host和端口
+        {
+          "Host": "localhost",
+          "Port": 5003
+        }
+      ],
+      "UpstreamPathTemplate": "/contacts/apply-requests/{catchAll}", //上游路径
+      "UpstreamHttpMethod": [ "Get", "Put", "Post" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "finbook",
+        "AllowedScopes": [ "contact_api" ]
+      }
     }
   ],
   "GlobalConfiguration": {

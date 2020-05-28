@@ -19,6 +19,7 @@ using Microsoft.Extensions.Options;
 using Consul;
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using DotNetCore.CAP.Dashboard.NodeDiscovery;
 
 namespace User.API
 {
@@ -62,6 +63,26 @@ namespace User.API
             services.AddControllers(options => {
                 options.Filters.Add(typeof(GlobalExceptionFilter));
             }).AddNewtonsoftJson();
+
+
+            services.AddCap(x =>
+            {
+                x.UseMySql(Configuration.GetConnectionString("MysqlUser"));
+                x.UseRabbitMQ("localhost");
+                x.UseDashboard();
+
+                // ×¢²á½Úµãµ½ Consul
+                x.UseDiscovery(d =>
+                {
+                    d.DiscoveryServerHostName = "localhost";
+                    d.DiscoveryServerPort = 8500;
+                    d.CurrentNodeHostName = "localhost";
+                    d.CurrentNodePort = 5800;
+                    d.NodeId = "1";
+                    d.NodeName = "CAP No.1 Node";
+                });
+            });
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -85,7 +106,6 @@ namespace User.API
             {
                 DeRegisterService(app, serviceOptions, consul);
             });
-
 
             app.SeedAsync().Wait();
             app.UseAuthentication();

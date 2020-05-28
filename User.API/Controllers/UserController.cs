@@ -10,6 +10,8 @@ using User.API.Filters;
 using Microsoft.AspNetCore.JsonPatch;
 using User.API.Models;
 using User.API.Dtos;
+using DotNetCore.CAP;
+using User.API.IntegrationEvents;
 
 namespace User.API.Controllers
 {
@@ -20,11 +22,15 @@ namespace User.API.Controllers
     {
         private UserContext _userContext;
         private ILogger<UserController> _logger;
+        private ICapPublisher _capPublisher;
+
         
-        public UserController(UserContext userContext, ILogger<UserController> logger)
+        public UserController(UserContext userContext, 
+            ILogger<UserController> logger, ICapPublisher capPublisher)
         {
             _userContext = userContext;
             _logger = logger;
+            _capPublisher = capPublisher;
         }
 
         [HttpGet("")]
@@ -44,12 +50,73 @@ namespace User.API.Controllers
         [HttpPatch("")]
         public async Task<IActionResult> Patch([FromBody]JsonPatchDocument<APPUser> patch)
         {
-            var user =await _userContext.Users
-                .SingleOrDefaultAsync(u => u.Id == UserIdentity.UserId);
+            //var user =await _userContext.Users
+            //    .SingleOrDefaultAsync(u => u.Id == UserIdentity.UserId);
+            //patch.ApplyTo(user);
+
+            //_userContext.SaveChanges();
+            //return Json(user);
+
+            var user = await _userContext.Users.
+               SingleOrDefaultAsync(u => u.Id == UserIdentity.UserId);
+
             patch.ApplyTo(user);
 
-            _userContext.SaveChanges();
+            foreach (var property in user.UserProperties)
+            {
+                _userContext.Entry(property).State = EntityState.Detached;
+            }
+
+            var originProperties = await _userContext.UserProperties.AsNoTracking().
+                Where(u => u.AppUserId == UserIdentity.UserId).ToListAsync(); //原有的
+
+            var allProperties = originProperties.Union(user.UserProperties).Distinct(); //原有的和现在的并集去重
+
+            var removedProperties = originProperties.Except(user.UserProperties);
+            var newProperties = allProperties.Except(originProperties);
+
+            foreach (var property in removedProperties)
+            {
+                _userContext.Remove(property);
+            }
+
+            foreach (var property in newProperties)
+            {
+                _userContext.Add(property);
+            }
+
+
+            //事务
+            using (var transaction = _userContext.Database.BeginTransaction())
+            {
+                //发布用户变更的消息
+                RaiseUserprofileChangedEvent(user);
+
+                _userContext.Users.Update(user);
+                _userContext.SaveChanges();
+
+                transaction.Commit();
+            }
+
             return Json(user);
+        }
+
+        private void RaiseUserprofileChangedEvent(APPUser user)
+        {
+            if (_userContext.Entry(user).Property(nameof(user.Name)).IsModified||
+                _userContext.Entry(user).Property(nameof(user.Title)).IsModified ||
+                _userContext.Entry(user).Property(nameof(user.Company)).IsModified ||
+                _userContext.Entry(user).Property(nameof(user.Avatar)).IsModified)
+            {
+                _capPublisher.PublishAsync("finbook.userapi.user_profile_changed",  new UserProfileChangedEvent()
+                {
+                    UserId = user.Id,
+                    Name = user.Name,
+                    Title = user.Title,
+                    Company = user.Company,
+                    Avatar = user.Avatar
+                });
+            }
         }
 
         /// <summary>
